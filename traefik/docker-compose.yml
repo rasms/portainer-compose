@@ -48,6 +48,22 @@ services:
       - "traefik.http.routers.edge.service=edge"
       - "traefik.http.routers.edge.tls.certresolver=leresolver"
 
+  caddy:
+    image: caddy:2.4.0-alpine
+    restart: unless-stopped
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.caddy.rule=Host(`cntb01.leissner.io`)"
+      - "traefik.http.routers.caddy.entrypoints=websecure"
+      - "traefik.http.routers.caddy.service=caddy"
+      - "traefik.http.routers.caddy.tls.certresolver=leresolver"
 
 volumes:
   portainer_data:
+  caddy_data:
+  caddy_config:
